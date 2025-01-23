@@ -1,0 +1,10 @@
+#To work with the bathymetric contours is necessary to trace them first in ArcGIS. There is a tool available, Contour, in the Spatial Analyst tools toolbox.
+#However, if you prefer to trace the contours with other toolboxes, you may use the Analysis and Data Management tools. However, this takes longer to be applied.
+
+#1. Search for "contours bathymetry" in the ArcGIS repository. You will find a source with the requested contours (i.e. GEBCO 500m Bathymetry Contours 2022).
+#2. Clasify the lines in properties, to visualize them with different colours.
+#3. With the tools, find the polygon that is enclosed by the lines of maximum depth and the landshape from "World Countries Generalized".
+#4. From there, begin to find the polygons that are enclosed by each set to lines and use operations of addition of substraction between them to create the contours.
+#5. Some support is offered by the layer "Global Bathymetry BTM (Esri)", from the ArcGIS repository. Using the tool identify, you can see which is the bathymetry of the area that you are evaluating.
+
+#End of notes
