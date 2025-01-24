@@ -1,7 +1,7 @@
 #IVa. Biological diversity - Removing duplicates 
 setwd("//workingdirectory") #setting up the working directory.   
 
-#Exploring first the data structure
+#Exploring data structure
 rm(i,x,y)
 lenghtsts <- c()
 for(i in 1:length(namesPlanktonBenthos)){
@@ -275,7 +275,7 @@ for (b in 1:length(namesTimeSeriesAll)){
     mx <- 500
     
     x <- get(namesTimeSeriesAll[b])
-    #splitting in NA and no NA parts to be able to perform the masking
+    #splitting in NA and no NA parts
     x_noNA <- x %>% filter(!is.na(x$decimalLongitude) | !is.na(x$decimalLatitude))
     x_NA <- x %>% filter(is.na(x$decimalLongitude) | is.na(x$decimalLatitude))
     
@@ -354,7 +354,7 @@ for(i in 1:length(namesNodupsAll)){
 
 timeSeriesAll_nodups$depthAccuracy <- as.numeric(timeSeriesAll_nodups$depthAccuracy)
 
-#comparing that results are the same either splitting the dataset or not
+#comparing that results are the same either splitting the dataset in parts or not
 timeSeriesPB_nodups <- timeSeriesPB_nodups[!duplicated(timeSeriesPB_nodups$id),]
 timeSeriesAll_nodups <- timeSeriesAll_nodups[!duplicated(timeSeriesAll_nodups$id),]
 nrow(timeSeriesAll_nodups)
