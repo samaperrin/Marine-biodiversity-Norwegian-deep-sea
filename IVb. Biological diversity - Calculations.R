@@ -131,7 +131,7 @@ for(i in 1:length(namesTimeSeries)){
   namesStats[i] <- gsub(" ","",paste(namesNodups[i],"_stats"))
 }
 
-#Calculating the overall ratio (See figure 6 in the manuscript) for each decade
+#Calculating the overall ratio (See figure 6a in the manuscript) for each decade
 ratiosShallow <- c()
 ratiosDeep <- c()
 rm(i,x)
@@ -378,7 +378,7 @@ names(occurrences_db)[1] <- "deep_1876_1900"
 rownames(occurrences_db) <- (1:11)
 
 View(srichness_db)
-#Shallow is one in itself,  species richness
+#Shallow is one dataset and depth zone in itself,  species richness
 
 nrow(timeSeriesJoint %>% filter(!is.na(individualCount)))
 nrow(timeSeriesJoint %>% filter(database == "gbif"))
