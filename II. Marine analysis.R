@@ -331,7 +331,7 @@ rm(i)
 all24_worms <- c()
 all24_wormsnrow <- c()
 for(i in 1:length(all24)){all24_worms[i] <- gsub(" ","",paste(all24[i], "_mkd_worms")) }
-for(i in 1:length(all24)){all24_wormsnrow[i] <- nrow(get(all24_worms[i]))} #length(all24wCoord)
+for(i in 1:length(all24)){all24_wormsnrow[i] <- nrow(get(all24_worms[i]))} 
 all24_wormsnrow
 all24_wormsnrow <- cbind(all24_worms,all24_wormsnrow)
 View(all24_wormsnrow)
