@@ -140,7 +140,6 @@ tableA <- cbind(all24,all24_mkdnrow)
 View(tableA)
 
 #Filtering to species level   
-
 rm(x,i)
 rm(tableBsp)
 tableBsp <- c()
@@ -151,7 +150,7 @@ tableBsp
 tableBsp <- cbind(all24_mkd,tableBsp)
 View(tableBsp)
 
-#2. Marine taxon filtering with the WoRMS database dump (it can be requested through the WoRMS website)                
+#3. Marine taxon filtering with the WoRMS database dump (it can be requested through the WoRMS website)                
 rm(i,a,b)
 length(all24_mkd)
 all24_mkd
@@ -173,9 +172,7 @@ for (b in 1:length(all24_mkd)){
   
   for (i in exc_class){ dbs_mkd_taxa <- dbs_mkd_taxa %>% filter(class != i) }
   
-  
   #II. Reading information from WoRMS in order to determine which families are non-marine 
-  
   taxon <- read.delim("~/R/taxon.txt") %>% filter(acceptedNameUsage != "") # to get accepted names and the names where they come from (i.e Lophelia) # filter(taxonomicStatus == "accepted") only has accepted names, but not the species that has been re-assigned from their original designation.
   speciesprofile <- read.delim("~/R/speciesprofile.txt")
   unique(taxon$taxonRank) #verify that taxonomic level corresponds to species.
@@ -201,9 +198,7 @@ for (b in 1:length(all24_mkd)){
   if(length(which(max_log == 1))>0) { families_db <- families_db[-(which(max_log == 1))]  }
   length(families_db)
   
-
   #Repeat the previous operation after removing NA records, to find matching records in WoRMS
-  
   n <- 1
   rm(i)
   max_log <- c()
