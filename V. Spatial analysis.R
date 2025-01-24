@@ -850,6 +850,8 @@ rows <- unique(logstable$interval)
 pall2 <- c("black","red","gold2","gold2","blue","turquoise","turquoise")
 palleteBlue
 
+##Plotting results
+
 plotO <- ggplot(completesets) +
   scale_color_manual("Datasets", breaks = c("all","shallow","deep","deepPL","deepBE"), labels = c("All","Shallow","Deep","Planktonic","Benthic"), values = c("all"="black", "deep"="red3", "deepBE"="#E4BC01", "deepPL"="#3DC9BC", "shallow"="blue", "shallowBE"="#E4BC01", "shallowPL" = "#3DC9BC")) + 
   geom_point(data = completesets, aes(interval, logCounts, group = subsets, color = subsets), size = 1) + 
@@ -896,6 +898,6 @@ plotQ <- plot_grid(rel_heights = c(0.5, 1), plotO, plotEtoH, ncol = 1) +
 
 plotQ
 
-grid.arrange(arrangeGrob(plotQ, left = y.grob, bottom = x.grob, top = title.grob)) #+ theme(plot.margin = unit(c(0,10,0,20), "points"))
+grid.arrange(arrangeGrob(plotQ, left = y.grob, bottom = x.grob, top = title.grob))
 
 ##End script V.
