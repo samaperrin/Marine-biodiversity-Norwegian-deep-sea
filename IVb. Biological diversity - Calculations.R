@@ -2,41 +2,43 @@
 setwd("//workingdirectory") #setting up the working directory. 
 
 #Splitting data into decades
-rm(i,x,y,sum)
+
+library(dplyr)
+
+timeSeriesJoint <- readRDS("data/timeSeriesJoint.RDS")
 ini <- 1890
 fin <- 1900
+
+timeSeries <- list()
 namesTimeSeries <- c()
 
-for(i in 1:14){
+for (i in 1:14) {
   
   x <- timeSeriesJoint
   
-  if(i == 1){
-    y <- x %>% filter(year >= 1876 & year < fin) # Removing pre-1876 occurrences
+  if (i == 1){
+    y <- x[x$year >= 1876 & x$year < fin,] # Removing pre-1876 occurrences
     sum <- nrow(y)
-  }
-  
-  if(i > 1 & i < 14){
-    y <- x %>% filter(year >= ini & year < fin)
+  } else if (i > 1 & i < 14){
+    y <- x[x$year >= ini & x$year < fin,]
+    sum <- sum + nrow(y)
+  } else if (i == 14) {
+    y <- x[x$year >= ini,]
     sum <- sum + nrow(y)
   }
-  
-  if(i == 14){
-    y <- x %>% filter(year >= ini)
-    sum <- sum + nrow(y)
-  }
-  
-  assign(gsub(" ","",paste("alltseries_",ini,"_",fin)), y)
-  namesTimeSeries[i] <- gsub(" ","",paste("alltseries_",ini,"_",fin))
   
   if(i == 1){
-    assign(gsub(" ","",paste("alltseries_1876_",fin)), y)
-    namesTimeSeries[i] <- gsub(" ","",paste("alltseries_1876_",fin))
-  }
-  
-  if(i == 14){
-    assign(gsub(" ","",paste("alltseries_",ini,"_2024")), y)
-    namesTimeSeries[i] <- gsub(" ","",paste("alltseries_",ini,"_2024"))
+    assign(paste0("alltseries_1876_",fin), y)
+    timeSeries[[i]] <- y
+    namesTimeSeries[i] <- paste0("alltseries_1876_",fin)
+  } else if(i == 14){
+    assign(paste0("alltseries_",ini,"_2024"), y)
+    timeSeries[[i]] <- y
+    namesTimeSeries[i] <- paste0("alltseries_",ini,"_2024")
+  } else {
+    assign(paste0("alltseries_",ini,"_",fin), y)
+    timeSeries[[i]] <- y
+    namesTimeSeries[i] <- paste0("alltseries_",ini,"_",fin)
   }
   
   print(ini)
@@ -46,7 +48,7 @@ for(i in 1:14){
   
 }
 
-namesTimeSeries
+names(timeSeries) <- namesTimeSeries
 rm(i,x,y,sum)
 
 
@@ -60,20 +62,27 @@ namesStats <- c()
 
 namesShallow <- c()
 namesDeep <- c()
+shallowData <- list()
+deepData <- list()
 
-for(i in 1:length(namesTimeSeries)){
+namesNoDups <- paste0(namesTimeSeries, "_noDups")
+statsNoDups <- list()
+
+for(i in 1:length(timeSeries)){
   
-  x <- get(namesTimeSeries[i])
+  x <- timeSeries[[i]]
   
   shallow <- x %>% filter(depth < 500 | matchContour == "matchShallow") 
   print(unique(x$matchContour))
-  assign(gsub(" ","", paste(namesNodups[i],"_shallow")),shallow)
-  namesShallow[i] <- gsub(" ","", paste(namesNodups[i],"_shallow"))
+  assign(paste0(namesNoDups[i],"_shallow"),shallow)
+  namesShallow[i] <- paste0(namesNoDups[i],"_shallow")
+  shallowData[[i]] <- shallow
   
   deep <- x %>% filter(depth >= 500 | matchContour == "matchDeep") 
   print(unique(x$matchContour))
-  assign(gsub(" ","", paste(namesNodups[i],"_deep")),deep)
-  namesDeep[i] <- gsub(" ","", paste(namesNodups[i],"_deep"))
+  assign(paste0(namesNoDups[i],"_deep"),deep)
+  namesDeep[i] <- paste0(namesNoDups[i],"_deep")
+  deepData[[i]] <- deep
   
   for(b in 1:length(guide)){
     
@@ -90,7 +99,7 @@ for(i in 1:length(namesTimeSeries)){
       if (a == 29) {
         z <- y %>% filter(decimalLatitude>= init & decimalLatitude<= (init+1))
         init <- init + 1
-      }  
+      }
       
       #General stats 
       sp_list_abundances <- z %>% arrange(scientificName) %>% group_by(scientificName, kingdom, class, family) %>% summarise(abundance = sum(individualCount)) %>% filter(grepl("[a-zA-Z]{1,25}\\s{1}[a-z]{2,25}", scientificName))
@@ -103,17 +112,19 @@ for(i in 1:length(namesTimeSeries)){
       abundances_ts[a] <- sum(sp_list$abundance, na.rm = TRUE)
       
       #quantification of occurrences
-      occurrences_ts[a] <- nrow(z)     }
+      occurrences_ts[a] <- nrow(z)     
+    }
     
     if(b == 1){
       srichness_sd <- srichness_ts
       abundances_sd <- abundances_ts
-      occurrences_sd <- occurrences_ts      }
-    
-    if(b > 1){
+      occurrences_sd <- occurrences_ts      
+    } else if (b > 1){
       srichness_sd <- cbind(srichness_sd,srichness_ts)
       abundances_sd <- cbind(abundances_sd,abundances_ts)
-      occurrences_sd <- cbind(occurrences_sd,occurrences_ts)      }  }
+      occurrences_sd <- cbind(occurrences_sd,occurrences_ts)      
+    }  
+  }
   
   stats_ts <- as.data.frame(cbind(srichness_sd, abundances_sd, occurrences_sd))  
   names(stats_ts) <- c("shallowS", "deepS", "shallowAb", "deepAb", "shallowOc", "deepOc")
@@ -127,16 +138,21 @@ for(i in 1:length(namesTimeSeries)){
   stats_ts$deepCumuOc <- cumsum(stats_ts$deepOc)
   rownames(stats_ts) <- c(56:84)
   
-  assign(gsub(" ","",paste(namesNodups[i],"_stats")), stats_ts)
-  namesStats[i] <- gsub(" ","",paste(namesNodups[i],"_stats"))
+  assign(gsub(" ","",paste(namesNoDups[i],"_stats")), stats_ts)
+  namesStats[i] <- gsub(" ","",paste(namesNoDups[i],"_stats"))
+  statsNoDups[[i]] <- stats_ts
 }
+
+names(deepData) <- namesDeep
+names(shallowData) <- namesShallow
+names(statsNoDups) <- namesStats
 
 #Calculating the overall ratio (See figure 6a in the manuscript) for each decade
 ratiosShallow <- c()
 ratiosDeep <- c()
 rm(i,x)
-for(i in 1:length(namesNodups)){
-  x <- get(gsub(" ","",paste(namesNodups[i],"_stats")))
+for(i in 1:length(statsNoDups)){
+  x <- statsNoDups[[i]]
   
   if(i == 1){
     shallowS <- x$shallowS
