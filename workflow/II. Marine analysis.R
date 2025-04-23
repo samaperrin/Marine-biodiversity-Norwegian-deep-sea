@@ -17,7 +17,7 @@ all24 <- c("gbifa_1876to1899","gbifa_1900to1909","gbifa_1910to1919","gbifa_1920t
            "obisb_1950to1959","obisb_1960to1969","obisb_1970to1979","obisb_1980to1989","obisb_1990to1999",
            "obisb_2000to2009","obisb_2010to2019","obisb_2020to2024","emodc","nexpd")
 
-# Import two just as a sample
+# Import all data
 fullData <- lapply(all24, FUN = function(x) {
   if (grepl("gbif", x)) {
     dataset <- readRDS(paste0("data/gbif/", x, ".RDS"))

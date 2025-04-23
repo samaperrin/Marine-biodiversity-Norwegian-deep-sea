@@ -1,5 +1,5 @@
 #IVa. Biological diversity - Removing duplicates 
- #setting up the working directory.   
+#setting up the working directory.   
 library(dplyr)
 library(sf)
 
@@ -63,7 +63,7 @@ for(i in 1:14){
   print(fin)
   ini <- ini + 10
   fin <- fin + 10  
-  }
+}
 
 names(timeSeries) <- namesTimeSeries
 namesTimeSeries
@@ -310,7 +310,7 @@ for (b in 1:length(timeSeriesAllList)){
                       !duplicated(df[,c("scientificName", "decimalLatitude", "decimalLongitude", "depth", "day", "month", "year", "database")]),])
       # df = df[!(duplicated(df$decimalLatitude) & duplicated(df$decimalLongitude) & duplicated(df$depth) & duplicated(df$day) & duplicated(df$month) & duplicated(df$year) & duplicated(df$scientificName) & !duplicated (df$database)),]
       df <- df[!(duplicated(df[,c("scientificName", "decimalLatitude", "decimalLongitude", "depth", "day", "month", "year")]) & 
-             !duplicated(df[,c("scientificName", "decimalLatitude", "decimalLongitude", "depth", "day", "month", "year", "database")])),]
+                   !duplicated(df[,c("scientificName", "decimalLatitude", "decimalLongitude", "depth", "day", "month", "year", "database")])),]
       k <- nrow(x)
       mylist[[f]] <- x
       link <- do.call("rbind",mylist)
