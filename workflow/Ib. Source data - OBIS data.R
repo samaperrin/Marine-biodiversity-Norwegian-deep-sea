@@ -2,7 +2,7 @@
 setwd("//workingdirectory") #setting up the working directory.   
 
 #Packages to be used
-install.packages("robis") #this package allows to connect with the OBIS API.
+if (!("robis" %in% installed.packages())) {install.packages("robis")} #this package allows to connect with the OBIS API.
 library(robis) 
 
 #Here are the 17 fields coinciding with GBIF. The field "depthAccuracy" will be added with corresponding NA values for next sections of the code.
@@ -64,3 +64,9 @@ obisb_2020to2024 <- occurrence(geometry = "POLYGON ((38.000 85.000, -27.000 85.0
 obisb_2020to2024 = obisb_2020to2024[c("coordinateUncertaintyInMeters", "class", "datasetName", "dateIdentified", "day", "decimalLatitude", "decimalLongitude", "depth", "eventDate", "family", "id", "individualCount", "flags", "kingdom", "maximumDepthInMeters", "minimumDepthInMeters", "month", "scientificName", "taxonRank", "year")]
 
 ##End script Ib
+obisData <- dplyr::bind_rows(obisb_1876to1899, obisb_1900to1909, obisb_1910to1919,
+                             obisb_1920to1929, obisb_1930to1939, obisb_1940to1949,
+                             obisb_1950to1959, obisb_1960to1969, obisb_1970to1979,
+                             obisb_1980to1989, obisb_1990to1999, obisb_2000to2009,
+                             obisb_2010to2019, obisb_2020to2024)
+saveRDS(obisData, "data/obisRawData.RDS")

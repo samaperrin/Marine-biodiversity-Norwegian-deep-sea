@@ -1,5 +1,4 @@
 #IVa. Biological diversity - Calculations 
-setwd("//workingdirectory") #setting up the working directory. 
 
 #Splitting data into decades
 
